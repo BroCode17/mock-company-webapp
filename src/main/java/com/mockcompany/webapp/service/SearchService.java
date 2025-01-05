@@ -70,8 +70,6 @@ public class SearchService {
             }
         }
         // Return results
-        //return itemList;
-        // Break test intensionaly
-        return Collections.emptyList();
+        return itemList;
     }
 }
