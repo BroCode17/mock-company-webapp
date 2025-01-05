@@ -1,45 +1,49 @@
 pipeline {
-  agent any
+    agent any
 
-  options {
-    disableConcurrentBuilds()
-    buildDiscarder(logRotator(numToKeepStr: '5')
-  }
-
-  stages{
-    stage('Checkout') {
-        steps {
-            checkout scm
-        }
+    // Ensure the build can be run on any agent
+    options {
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '5'))
     }
 
-    stage('Build') {
-        steps {
-            sh './gradlew.assemble'
-        }
-    }
-
-    stage('Test') {
-        steps {
-            sh './gradlew test'
+    // Define stages for the build pipeline
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from repository
+                checkout scm
+            }
         }
 
-        post {
-            always {
-                junit '**/build/test-result/test/*.xml'
+        stage('Build') {
+            steps {
+                // Build the project using Gradle wrapper
+                sh './gradlew assemble'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run tests using Gradle wrapper
+                sh './gradlew test'
+            }
+            post {
+                always {
+                    // Publish test results
+                    junit '**/build/test-results/test/*.xml'
+                }
             }
         }
     }
-  }
 
-  post {
-    success {
-        echo 'Build succeeded!'
+    // Post-build actions
+    post {
+        success {
+            echo 'Build succeeded!'
+        }
+        failure {
+            echo 'Build failed!'
+        }
     }
-    failure {
-        echo 'Build failed!'
-    }
-  }
-
-
 }
