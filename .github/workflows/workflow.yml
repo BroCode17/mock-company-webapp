@@ -25,7 +25,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Validate Jenkinsfile
-        uses: jenkinsci/jenkinsfile-runner-github-action@main
+        uses: jenkinsci/jenkinsfile-runner-github-action@master
         with:
           jenkinsfile: Jenkinsfile
 
